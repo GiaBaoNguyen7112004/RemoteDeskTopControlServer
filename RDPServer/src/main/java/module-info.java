@@ -6,4 +6,6 @@ module com.baotruongtuan.rdpserver {
 
     opens com.baotruongtuan.rdpserver to javafx.fxml;
     exports com.baotruongtuan.rdpserver;
+    exports com.baotruongtuan.rdpserver.controller;
+    opens com.baotruongtuan.rdpserver.controller to javafx.fxml;
 }
