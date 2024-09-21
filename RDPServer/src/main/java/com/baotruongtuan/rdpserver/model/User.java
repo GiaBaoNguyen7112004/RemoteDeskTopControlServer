@@ -1,5 +1,7 @@
 package com.baotruongtuan.rdpserver.model;
 
+import org.java_websocket.client.WebSocketClient;
+
 import java.time.LocalDate;
 
 public class User {

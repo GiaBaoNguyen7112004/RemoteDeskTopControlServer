@@ -3,6 +3,7 @@ module com.baotruongtuan.rdpserver {
     requires javafx.fxml;
 
     requires com.dlsc.formsfx;
+    requires Java.WebSocket;
 
     opens com.baotruongtuan.rdpserver to javafx.fxml;
     exports com.baotruongtuan.rdpserver;

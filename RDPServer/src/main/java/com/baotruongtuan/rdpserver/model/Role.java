@@ -1,6 +1,9 @@
 package com.baotruongtuan.rdpserver.model;
 
+import org.java_websocket.client.WebSocketClient;
+
 public class Role {
+    private WebSocketClient client;
     private int id;
     private String roleName;
 
