@@ -2,6 +2,7 @@ package com.baotruongtuan.RdpServer.controller;
 
 import com.baotruongtuan.RdpServer.payload.ResponseData;
 import com.baotruongtuan.RdpServer.payload.request.AuthenticationRequest;
+import com.baotruongtuan.RdpServer.payload.request.IntrospectRequest;
 import com.baotruongtuan.RdpServer.payload.request.UserCreationRequest;
 import com.baotruongtuan.RdpServer.service.imp.AuthenticationServiceImp;
 import lombok.AccessLevel;
@@ -26,6 +27,15 @@ public class AuthenticationController {
     {
         ResponseData responseData = ResponseData.builder()
                 .data(authenticationServiceImp.authenticate(authenticationRequest))
+                .build();
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    @PostMapping("/introspect")
+    public ResponseEntity<?> introspect(@RequestBody IntrospectRequest introspectRequest)
+    {
+        ResponseData responseData = ResponseData.builder()
+                .data(authenticationServiceImp.introspect(introspectRequest))
                 .build();
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }

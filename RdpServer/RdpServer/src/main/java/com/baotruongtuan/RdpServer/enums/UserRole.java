@@ -11,8 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum UserRole {
     ADMIN(1, "ADMIN"),
-    STAFF(2, "MANAGER"),
-    MANAGER(3, "STAFF");
+    STAFF(2, "STAFF");
 
     int id;
     String name;

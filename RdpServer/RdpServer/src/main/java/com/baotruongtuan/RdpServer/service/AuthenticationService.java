@@ -1,10 +1,12 @@
 package com.baotruongtuan.RdpServer.service;
 
 import com.baotruongtuan.RdpServer.dto.AuthenticationDTO;
+import com.baotruongtuan.RdpServer.dto.IntrospectDTO;
 import com.baotruongtuan.RdpServer.entity.User;
 import com.baotruongtuan.RdpServer.exception.AppException;
 import com.baotruongtuan.RdpServer.exception.ErrorCode;
 import com.baotruongtuan.RdpServer.payload.request.AuthenticationRequest;
+import com.baotruongtuan.RdpServer.payload.request.IntrospectRequest;
 import com.baotruongtuan.RdpServer.repository.UserRepository;
 import com.baotruongtuan.RdpServer.service.imp.AuthenticationServiceImp;
 import com.baotruongtuan.RdpServer.utils.JwtUtilHelper;
@@ -34,6 +36,21 @@ public class AuthenticationService implements AuthenticationServiceImp {
         return AuthenticationDTO.builder()
                 .authenticated(true)
                 .token(jwtUtilHelper.generateToken(user))
+                .build();
+    }
+
+    @Override
+    public IntrospectDTO introspect(IntrospectRequest introspectRequest){
+        try{
+            var jws = jwtUtilHelper.verifyToken(introspectRequest.getToken());
+        }
+        catch (Exception e)
+        {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        return IntrospectDTO.builder()
+                .isValid(true)
                 .build();
     }
 }

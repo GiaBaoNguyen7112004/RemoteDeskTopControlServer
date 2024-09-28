@@ -1,13 +1,18 @@
 package com.baotruongtuan.RdpServer.utils;
 
 import com.baotruongtuan.RdpServer.entity.User;
+import com.baotruongtuan.RdpServer.exception.AppException;
+import com.baotruongtuan.RdpServer.exception.ErrorCode;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -56,5 +61,19 @@ public class JwtUtilHelper {
         }
 
         return stringJoiner.toString();
+    }
+
+    public SignedJWT verifyToken(String token) throws ParseException, JOSEException {
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime =  new Date(signedJWT.getJWTClaimsSet().getExpirationTime()
+                .toInstant().toEpochMilli());
+
+        var verified = signedJWT.verify(verifier);
+
+        if(!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        return signedJWT;
     }
 }
