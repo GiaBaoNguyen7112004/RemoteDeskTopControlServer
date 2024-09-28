@@ -3,7 +3,7 @@ package com.baotruongtuan.rdpclient;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class RdpController {
     @FXML
     private Label welcomeText;
     @FXML

@@ -16,6 +16,7 @@ import com.baotruongtuan.RdpServer.service.imp.UserServiceImp;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class UserService implements UserServiceImp {
     RoleMapper roleMapper;
     PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public UserDTO createUser(UserCreationRequest userCreationRequest) {
         int roleID = userCreationRequest.getRoleID();
@@ -49,6 +51,7 @@ public class UserService implements UserServiceImp {
         return userMapper.toUserDTO(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream().map(user -> {
@@ -61,17 +64,20 @@ public class UserService implements UserServiceImp {
                 .toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public boolean deleteUser(int id) {
         userRepository.delete(userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXCEPTION)));
         return true;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public UserDTO getUser(int id) {
         return userMapper.toUserDTO(userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXCEPTION)));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public UserDTO updateUser(UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userUpdateRequest.getId())

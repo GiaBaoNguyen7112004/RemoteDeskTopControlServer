@@ -4,12 +4,14 @@ import com.baotruongtuan.RdpServer.payload.ResponseData;
 import com.baotruongtuan.RdpServer.payload.request.UserCreationRequest;
 import com.baotruongtuan.RdpServer.payload.request.UserUpdateRequest;
 import com.baotruongtuan.RdpServer.service.imp.UserServiceImp;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,7 @@ public class UserController {
     UserServiceImp userServiceImp;
 
     @PostMapping()
-    public ResponseEntity<?> createUser(@RequestBody UserCreationRequest userCreationRequest)
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserCreationRequest userCreationRequest)
     {
         ResponseData responseData = ResponseData.builder()
                 .data(userServiceImp.createUser(userCreationRequest))
