@@ -1,6 +1,7 @@
-package com.baotruongtuan.RdpServer.payload;
+package com.baotruongtuan.RdpServer.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

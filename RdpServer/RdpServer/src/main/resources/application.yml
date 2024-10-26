@@ -11,6 +11,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 server:
+  address: 0.0.0.0
   port: 8088
   servlet:
     context-path: /rdp

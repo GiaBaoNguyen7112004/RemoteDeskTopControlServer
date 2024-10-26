@@ -1,13 +1,13 @@
 package com.baotruongtuan.RdpServer.payload.request;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -27,5 +27,6 @@ public class UserCreationRequest {
 
     @Email(message = "INVALID_EMAIL")
     String email;
+
     int roleID;
 }

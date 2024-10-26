@@ -1,10 +1,9 @@
 package com.baotruongtuan.RdpServer.dto;
 
+import java.time.LocalDate;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter

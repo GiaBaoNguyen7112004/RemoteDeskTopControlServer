@@ -3,7 +3,8 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/RDPClient/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/RDPClient/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/RDPServer/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/RDPServer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/RdpServer/RdpServer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/RdpServer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/RdpServer/src/main/resources" charset="UTF-8" />
   </component>
 </project>

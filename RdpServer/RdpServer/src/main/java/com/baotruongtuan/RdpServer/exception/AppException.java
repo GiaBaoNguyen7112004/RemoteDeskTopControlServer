@@ -1,6 +1,6 @@
 package com.baotruongtuan.RdpServer.exception;
 
-public class AppException extends RuntimeException{
+public class AppException extends RuntimeException {
     private ErrorCode errorCode;
 
     public AppException(ErrorCode errorCode) {

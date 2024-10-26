@@ -1,12 +1,12 @@
 package com.baotruongtuan.RdpServer.entity;
 
+import java.time.LocalDate;
+import java.util.Set;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity(name = "users")
-public class User{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;

@@ -1,36 +1,47 @@
 package com.baotruongtuan.RdpServer.service;
 
+import java.time.Instant;
+import java.util.Date;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.baotruongtuan.RdpServer.dto.AuthenticationDTO;
 import com.baotruongtuan.RdpServer.dto.IntrospectDTO;
+import com.baotruongtuan.RdpServer.entity.ExpiredToken;
 import com.baotruongtuan.RdpServer.entity.User;
 import com.baotruongtuan.RdpServer.exception.AppException;
 import com.baotruongtuan.RdpServer.exception.ErrorCode;
 import com.baotruongtuan.RdpServer.payload.request.AuthenticationRequest;
 import com.baotruongtuan.RdpServer.payload.request.IntrospectRequest;
+import com.baotruongtuan.RdpServer.payload.request.LogOutRequest;
+import com.baotruongtuan.RdpServer.repository.ExpiredTokenRepository;
 import com.baotruongtuan.RdpServer.repository.UserRepository;
 import com.baotruongtuan.RdpServer.service.imp.AuthenticationServiceImp;
 import com.baotruongtuan.RdpServer.utils.JwtUtilHelper;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class AuthenticationService implements AuthenticationServiceImp {
     UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
     JwtUtilHelper jwtUtilHelper;
+    ExpiredTokenRepository expiredTokenRepository;
 
     @Override
     public AuthenticationDTO authenticate(AuthenticationRequest authenticationRequest) {
         String username = authenticationRequest.getUsername();
         String password = authenticationRequest.getPassword();
 
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         User user = userRepository.findByUsername(username);
-        if(user == null || !passwordEncoder.matches(password, user.getPassword()))
+        if (user == null || !passwordEncoder.matches(password, user.getPassword()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return AuthenticationDTO.builder()
@@ -40,17 +51,37 @@ public class AuthenticationService implements AuthenticationServiceImp {
     }
 
     @Override
-    public IntrospectDTO introspect(IntrospectRequest introspectRequest){
-        try{
+    public IntrospectDTO introspect(IntrospectRequest introspectRequest) {
+        boolean isValid = true;
+
+        try {
             var jws = jwtUtilHelper.verifyToken(introspectRequest.getToken());
+        } catch (Exception e) {
+            isValid = false;
         }
-        catch (Exception e)
-        {
+
+        return IntrospectDTO.builder().isValid(isValid).build();
+    }
+
+    @Override
+    public boolean logOut(LogOutRequest logOutRequest) {
+        boolean isSuccess = false;
+
+        try {
+            var jws = jwtUtilHelper.verifyToken(logOutRequest.getToken());
+
+            String jwtID = jws.getJWTClaimsSet().getJWTID();
+            ExpiredToken expiredToken = ExpiredToken.builder()
+                    .id(jwtID)
+                    .expireTime(new Date(Instant.now().toEpochMilli()))
+                    .build();
+
+            expiredTokenRepository.save(expiredToken);
+            isSuccess = true;
+        } catch (Exception e) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        return IntrospectDTO.builder()
-                .isValid(true)
-                .build();
+        return isSuccess;
     }
 }

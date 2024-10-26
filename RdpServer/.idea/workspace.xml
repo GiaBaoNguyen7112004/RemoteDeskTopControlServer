@@ -5,20 +5,53 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9690abab-50b9-4f72-b034-fbe4f9380c53" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/baotruongtuan/rdpserver/HelloApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/baotruongtuan/rdpserver/controller/EventController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/baotruongtuan/rdpserver/model/Role.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/baotruongtuan/rdpserver/model/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/baotruongtuan/rdpserver/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/src/main/java/com/baotruongtuan/rdpclient/RdpApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/src/main/java/com/baotruongtuan/rdpclient/RdpController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RDPClient/src/main/resources/com/baotruongtuan/rdpclient/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RdpServer.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/RdpServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/RdpServerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/config/AppInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/config/AppInitConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/controller/AuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/dto/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/Report.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/enums/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/enums/UserRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/AppException.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/AppException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/GlobalHandlerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/exception/GlobalHandlerException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/mapper/RoleMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/payload/ResponseData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/payload/request/UserCreationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/payload/request/UserCreationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/payload/request/UserUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/payload/request/UserUpdateRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/ReportRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/ReportRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/security/CustomFilterSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/security/CustomFilterSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/security/JwtAuthenticationEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/security/JwtAuthenticationEntryPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/AuthenticationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/imp/AuthenticationServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/imp/AuthenticationServiceImp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/imp/UserServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/service/imp/UserServiceImp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/utils/JwtUtilHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/java/com/baotruongtuan/RdpServer/utils/JwtUtilHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RdpServer/src/test/java/com/baotruongtuan/RdpServer/RdpServerApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/RdpServer/src/test/java/com/baotruongtuan/RdpServer/RdpServerApplicationTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,11 +99,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.RDPSocket.executor": "Run",
+    "Maven.RdpServer [clean].executor": "Run",
+    "Maven.RdpServer [install].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.RdpServerApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -111,6 +148,9 @@
       <workItem from="1727182529798" duration="8787000" />
       <workItem from="1727249066349" duration="714000" />
       <workItem from="1727249876182" duration="187000" />
+      <workItem from="1729429097781" duration="5837000" />
+      <workItem from="1729482105621" duration="193000" />
+      <workItem from="1729927891817" duration="6226000" />
     </task>
     <servers />
   </component>

@@ -1,27 +1,30 @@
 package com.baotruongtuan.RdpServer.utils;
 
-import com.baotruongtuan.RdpServer.entity.User;
-import com.baotruongtuan.RdpServer.exception.AppException;
-import com.baotruongtuan.RdpServer.exception.ErrorCode;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.baotruongtuan.RdpServer.entity.User;
+import com.baotruongtuan.RdpServer.exception.AppException;
+import com.baotruongtuan.RdpServer.exception.ErrorCode;
+import com.baotruongtuan.RdpServer.repository.ExpiredTokenRepository;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+
 @Component
 public class JwtUtilHelper {
+    @Autowired
+    ExpiredTokenRepository expiredTokenRepository;
 
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
@@ -29,15 +32,15 @@ public class JwtUtilHelper {
     @Value("${jwt.expiration-time}")
     private long expirationTime;
 
-    public String generateToken(User user)
-    {
+    public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("rdp.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(expirationTime, ChronoUnit.SECONDS).toEpochMilli()))
+                .expirationTime(new Date(
+                        Instant.now().plus(expirationTime, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
@@ -54,12 +57,10 @@ public class JwtUtilHelper {
         }
     }
 
-    public String buildScope(User user)
-    {
+    public String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
 
-        if(user.getRole() != null)
-        {
+        if (user.getRole() != null) {
             stringJoiner.add("ROLE_" + user.getRole().getName());
         }
 
@@ -71,12 +72,15 @@ public class JwtUtilHelper {
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expiryTime =  new Date(signedJWT.getJWTClaimsSet().getExpirationTime()
-                .toInstant().toEpochMilli());
+        Date expiryTime = new Date(
+                signedJWT.getJWTClaimsSet().getExpirationTime().toInstant().toEpochMilli());
 
         var verified = signedJWT.verify(verifier);
 
-        if(!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (expiredTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
         return signedJWT;
     }
 }

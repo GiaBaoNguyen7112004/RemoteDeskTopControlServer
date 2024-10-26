@@ -6,6 +6,7 @@
       <list>
         <option value="$PROJECT_DIR$/RDPClient/pom.xml" />
         <option value="$PROJECT_DIR$/RDPServer/pom.xml" />
+        <option value="$PROJECT_DIR$/RdpServer/RdpServer/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -1,10 +1,11 @@
 package com.baotruongtuan.RdpServer.mapper;
 
+import org.mapstruct.*;
+
 import com.baotruongtuan.RdpServer.dto.UserDTO;
 import com.baotruongtuan.RdpServer.entity.User;
 import com.baotruongtuan.RdpServer.payload.request.UserCreationRequest;
 import com.baotruongtuan.RdpServer.payload.request.UserUpdateRequest;
-import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
