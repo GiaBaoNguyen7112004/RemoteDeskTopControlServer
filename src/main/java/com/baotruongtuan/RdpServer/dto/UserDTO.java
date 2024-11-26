@@ -18,7 +18,7 @@ public class UserDTO {
     String username;
     String email;
     String jobTitle;
-    byte[] avatar;
+    AvatarDTO avatar;
     String companyName;
     RoleDTO roleDTO;
     List<DepartmentDTO> departmentDTOs;

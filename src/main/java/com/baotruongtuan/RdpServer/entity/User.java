@@ -34,6 +34,9 @@ public class User {
     Role role;
 
     @OneToMany(mappedBy = "user")
+    List<SessionLog> sessionLogs;
+
+    @OneToMany(mappedBy = "user")
     List<Report> reports;
 
     @OneToMany(mappedBy = "user")

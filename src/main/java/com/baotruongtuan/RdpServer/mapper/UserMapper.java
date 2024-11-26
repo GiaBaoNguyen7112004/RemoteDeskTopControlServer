@@ -22,7 +22,6 @@ public interface UserMapper {
 
     @AfterMapping
     default void afterMapping(@MappingTarget UserDTO.UserDTOBuilder userDTO, User user) {
-
         if (user.getDepartmentDetails() != null) {
             userDTO.departmentDTOs(user.getDepartmentDetails().stream()
                     .map(departmentDetail -> departmentMapper.toDepartmentDTO(departmentDetail.getDepartment()))

@@ -43,7 +43,8 @@ public class AuthenticationService implements IAuthenticationService {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXCEPTION));
         if (user == null || !passwordEncoder.matches(password, user.getPassword()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 

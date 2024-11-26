@@ -12,4 +12,5 @@ public class FeedbackMessage {
     public static final String INTROSPECT_SUCCESS = "Introspect successfully";
     public static final String JOIN_SUCCESS = "Join successfully";
     public static final String LEAVE_SUCCESS = "Leave successfully";
+
 }
