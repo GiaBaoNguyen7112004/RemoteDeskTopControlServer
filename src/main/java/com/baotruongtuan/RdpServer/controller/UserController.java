@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.baotruongtuan.RdpServer.payload.request.UserCreationRequest;
 import com.baotruongtuan.RdpServer.payload.request.UserUpdatingRequest;
@@ -73,10 +72,10 @@ public class UserController {
 
     @PostMapping(UrlMapping.JOIN_DEPARTMENT)
     public ResponseEntity<ResponseData> joinDepartment(@PathVariable int userId, @PathVariable String departmentCode) {
-        ResponseData responseData =
-                ResponseData.builder().message(FeedbackMessage.JOIN_SUCCESS)
-                        .data(userServiceImp.joinDepartment(userId, departmentCode))
-                        .build();
+        ResponseData responseData = ResponseData.builder()
+                .message(FeedbackMessage.JOIN_SUCCESS)
+                .data(userServiceImp.joinDepartment(userId, departmentCode))
+                .build();
         return ResponseEntity.ok().body(responseData);
     }
 

@@ -28,6 +28,7 @@ public enum ErrorCode {
     ALREADY_JOINED(2101, "User already joined this department", HttpStatus.BAD_REQUEST),
     NOT_JOIN(2102, "User have not joined this department", HttpStatus.BAD_REQUEST);
 
+
     int code;
     String message;
     HttpStatus httpStatus;

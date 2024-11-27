@@ -68,17 +68,17 @@ public class GlobalHandlerException {
         return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<?> exceptionHandler(Exception e) {
-//        ErrorCode errorCode = ErrorCode.UNCATEGORIED_EXCEPTION;
-//
-//        ResponseData responseData = ResponseData.builder()
-//                .data(errorCode.getMessage())
-//                .code(errorCode.getCode())
-//                .build();
-//
-//        return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
-//    }
+    //    @ExceptionHandler(Exception.class)
+    //    public ResponseEntity<?> exceptionHandler(Exception e) {
+    //        ErrorCode errorCode = ErrorCode.UNCATEGORIED_EXCEPTION;
+    //
+    //        ResponseData responseData = ResponseData.builder()
+    //                .data(errorCode.getMessage())
+    //                .code(errorCode.getCode())
+    //                .build();
+    //
+    //        return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
+    //    }
 
     public String mapAttribute(Map<String, Object> attributes, String message) {
         String maxValue = String.valueOf(attributes.get(MAX_ATTRIBUTE));

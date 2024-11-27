@@ -26,12 +26,11 @@ public class UrlMapping {
     public static final String GET_ALL_DEPARTMENTS = "/all-departments";
     public static final String GET_MEMBERS_IN_DEPARTMENT = "/members-in-department/{departmentId}";
 
-
-    //AVATAR API
+    // AVATAR API
     public static final String AVATARS = API + "/avatars";
     public static final String SAVE_AVATAR = "/avatar/{userId}";
     public static final String REMOVE_AVATAR = "/avatar/{userId}";
 
-    //CONSTRUCTOR
+    // CONSTRUCTOR
     private UrlMapping() {}
 }

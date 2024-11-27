@@ -1,8 +1,9 @@
 package com.baotruongtuan.RdpServer.mapper;
 
+import org.mapstruct.Mapper;
+
 import com.baotruongtuan.RdpServer.dto.SessionMessageDTO;
 import com.baotruongtuan.RdpServer.entity.SessionMessage;
-import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface SessionMessageMapper {

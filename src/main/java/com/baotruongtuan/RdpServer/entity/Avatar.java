@@ -1,6 +1,7 @@
 package com.baotruongtuan.RdpServer.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,5 +19,6 @@ public class Avatar {
 
     @Lob
     byte[] content;
+
     String header;
 }

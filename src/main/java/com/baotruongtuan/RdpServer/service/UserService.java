@@ -2,28 +2,24 @@ package com.baotruongtuan.RdpServer.service;
 
 import java.util.List;
 
-import com.baotruongtuan.RdpServer.dto.AvatarDTO;
-import com.baotruongtuan.RdpServer.dto.DepartmentDTO;
-import com.baotruongtuan.RdpServer.entity.*;
-import com.baotruongtuan.RdpServer.mapper.DepartmentMapper;
-import com.baotruongtuan.RdpServer.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.baotruongtuan.RdpServer.dto.DepartmentDTO;
 import com.baotruongtuan.RdpServer.dto.UserDTO;
+import com.baotruongtuan.RdpServer.entity.*;
 import com.baotruongtuan.RdpServer.enums.UserRole;
 import com.baotruongtuan.RdpServer.exception.AppException;
 import com.baotruongtuan.RdpServer.exception.ErrorCode;
+import com.baotruongtuan.RdpServer.mapper.DepartmentMapper;
 import com.baotruongtuan.RdpServer.mapper.UserMapper;
 import com.baotruongtuan.RdpServer.payload.request.UserCreationRequest;
 import com.baotruongtuan.RdpServer.payload.request.UserUpdatingRequest;
+import com.baotruongtuan.RdpServer.repository.*;
 import com.baotruongtuan.RdpServer.service.imp.IUserService;
 
 import lombok.AccessLevel;
@@ -53,9 +49,11 @@ public class UserService implements IUserService {
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
 
-        try{
+        try {
             userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {throw new AppException(ErrorCode.USER_EXISTED);}
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
 
         return userMapper.toUserDTO(user);
     }

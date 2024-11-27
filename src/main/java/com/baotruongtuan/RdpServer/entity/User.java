@@ -2,6 +2,7 @@ package com.baotruongtuan.RdpServer.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -36,8 +37,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<SessionLog> sessionLogs;
 
-    @OneToMany(mappedBy = "user")
-    List<Report> reports;
 
     @OneToMany(mappedBy = "user")
     List<DepartmentDetail> departmentDetails;
