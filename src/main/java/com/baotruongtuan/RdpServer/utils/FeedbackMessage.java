@@ -2,6 +2,7 @@ package com.baotruongtuan.RdpServer.utils;
 
 public class FeedbackMessage {
     public static final String CONNECT_SUCCESS = "Connected successfully";
+    public static final String CONNECT_FAILED = "Connection failed";
     public static final String DISCONNECT_SUCCESS = "Disconnected successfully";
     public static final String GET_SUCCESS = "Get successfully";
     public static final String UPDATE_SUCCESS = "Update successfully";

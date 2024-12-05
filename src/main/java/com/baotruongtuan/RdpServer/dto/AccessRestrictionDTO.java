@@ -5,11 +5,12 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClientMessageDTO {
-    Integer clientId;
-    String action;
+public class AccessRestrictionDTO {
+    String id;
+    String domain;
+    String app;
 }

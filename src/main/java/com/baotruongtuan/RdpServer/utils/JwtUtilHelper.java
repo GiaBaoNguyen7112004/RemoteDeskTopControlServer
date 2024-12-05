@@ -21,6 +21,9 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 @Component
 public class JwtUtilHelper {
     @Autowired
@@ -43,6 +46,7 @@ public class JwtUtilHelper {
                         Instant.now().plus(expirationTime, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
+                .claim("id", user.getId())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -82,5 +86,17 @@ public class JwtUtilHelper {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
+    }
+
+    public static String getScopeFromToken(String token) {
+        try {
+            // Giải mã token (không cần khóa nếu không xác thực chữ ký)
+            Claims claims = Jwts.parser().build().parseClaimsJwt(token).getBody();
+
+            // Lấy giá trị scope
+            return claims.get("scope", String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JWT token", e);
+        }
     }
 }

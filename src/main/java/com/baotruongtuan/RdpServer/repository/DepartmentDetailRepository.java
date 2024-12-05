@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.baotruongtuan.RdpServer.entity.DepartmentDetail;
 
+@Repository
 public interface DepartmentDetailRepository extends JpaRepository<DepartmentDetail, Integer> {
     List<DepartmentDetail> findAllByDepartmentId(int departmentId);
 

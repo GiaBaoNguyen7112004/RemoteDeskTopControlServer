@@ -1,9 +1,9 @@
 package com.baotruongtuan.RdpServer.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -30,5 +30,10 @@ public class SessionLog {
     User user;
 
     @OneToMany(mappedBy = "sessionLog")
-    List<SessionMessage> sessionMessages;
+    List<SessionEvent> sessionEvents;
+
+    public List<SessionEvent> getSessionEvents() {
+        if (sessionEvents == null) sessionEvents = new ArrayList<>();
+        return sessionEvents;
+    }
 }

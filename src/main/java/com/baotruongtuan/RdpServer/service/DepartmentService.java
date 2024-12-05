@@ -45,7 +45,6 @@ public class DepartmentService implements IDepartmentService {
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<UserDTO> getMembersInDepartment(int departmentId) {
         return departmentDetailRepository.findAllByDepartmentId(departmentId).stream()

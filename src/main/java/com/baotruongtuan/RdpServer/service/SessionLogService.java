@@ -1,0 +1,30 @@
+package com.baotruongtuan.RdpServer.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.baotruongtuan.RdpServer.dto.SessionLogDTO;
+import com.baotruongtuan.RdpServer.mapper.SessionLogMapper;
+import com.baotruongtuan.RdpServer.repository.SessionLogRepository;
+import com.baotruongtuan.RdpServer.service.imp.ISessionLogsService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Service
+public class SessionLogService implements ISessionLogsService {
+    SessionLogRepository sessionLogRepository;
+    SessionLogMapper sessionLogMapper;
+
+    @Override
+    public List<SessionLogDTO> getUserSessionLogs(int userId) {
+        return sessionLogRepository.findAll().stream()
+                .filter(sessionLog -> sessionLog.getUser().getId() == userId)
+                .map(sessionLogMapper::toSessionLogDTO)
+                .toList();
+    }
+}

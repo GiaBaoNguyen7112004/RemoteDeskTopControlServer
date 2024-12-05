@@ -31,6 +31,16 @@ public class UrlMapping {
     public static final String SAVE_AVATAR = "/avatar/{userId}";
     public static final String REMOVE_AVATAR = "/avatar/{userId}";
 
+    // ACCESS RESTRICTION API
+    public static final String ACCESS_RESTRICTIONS = API + "/access_restrictions";
+    public static final String GET_ALL_ACCESS_RESTRICTIONS = "/all-access-restrictions";
+    public static final String CREATE_ACCESS_RESTRICTION = "/access-restriction";
+    public static final String DELETE_ACCESS_RESTRICTION = "/access-restriction/{accessRestrictionId}";
+
+    // SESSION LOGS API
+    public static final String SESSION_LOGS = API + "/session-logs";
+    public static final String GET_USER_SESSION_LOGS = "/user/{userId}";
+
     // CONSTRUCTOR
     private UrlMapping() {}
 }

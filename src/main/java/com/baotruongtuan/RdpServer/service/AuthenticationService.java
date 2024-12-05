@@ -59,36 +59,29 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public IntrospectDTO introspect(IntrospectRequest introspectRequest) {
         boolean isValid = true;
-
         try {
             var jws = jwtUtilHelper.verifyToken(introspectRequest.getToken());
         } catch (Exception e) {
-            log.info("DIT ME MAY LOI ROI");
             isValid = false;
         }
-
         return IntrospectDTO.builder().isValid(isValid).build();
     }
 
     @Override
     public boolean logOut(LogOutRequest logOutRequest) {
         boolean isSuccess = false;
-
         try {
             var jws = jwtUtilHelper.verifyToken(logOutRequest.getToken());
-
             String jwtID = jws.getJWTClaimsSet().getJWTID();
             ExpiredToken expiredToken = ExpiredToken.builder()
                     .id(jwtID)
                     .expireTime(new Date(Instant.now().toEpochMilli()))
                     .build();
-
             expiredTokenRepository.save(expiredToken);
             isSuccess = true;
         } catch (Exception e) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-
         return isSuccess;
     }
 }

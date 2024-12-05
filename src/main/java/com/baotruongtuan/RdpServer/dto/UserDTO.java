@@ -18,6 +18,7 @@ public class UserDTO {
     String username;
     String email;
     String jobTitle;
+    Boolean isOnline;
     AvatarDTO avatar;
     String companyName;
     RoleDTO roleDTO;

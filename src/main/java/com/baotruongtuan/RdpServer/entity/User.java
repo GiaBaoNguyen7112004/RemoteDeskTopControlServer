@@ -2,7 +2,6 @@ package com.baotruongtuan.RdpServer.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -18,12 +17,13 @@ import lombok.experimental.FieldDefaults;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Integer id;
 
     String name;
     String password;
     String username;
     String email;
+    Boolean isOnline;
     String jobTitle;
     String companyName;
 
@@ -36,7 +36,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<SessionLog> sessionLogs;
-
 
     @OneToMany(mappedBy = "user")
     List<DepartmentDetail> departmentDetails;

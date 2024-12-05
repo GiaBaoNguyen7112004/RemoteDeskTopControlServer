@@ -14,7 +14,9 @@ import com.baotruongtuan.RdpServer.utils.JwtUtilHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Component
@@ -35,12 +37,13 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
 
             var verifiedJWT = jwtUtilHelper.verifyToken(token);
             String username = verifiedJWT.getJWTClaimsSet().getSubject();
+            String role = verifiedJWT.getJWTClaimsSet().getClaim("scope").toString();
 
             attributes.put("username", username);
+            attributes.put("role", role);
 
             isSuccess = true;
         }
-
         return isSuccess;
     }
 
