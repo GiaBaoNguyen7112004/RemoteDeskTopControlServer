@@ -10,6 +10,5 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccessRestrictionCreationRequest {
-    String domain;
-    String app;
+    String content;
 }

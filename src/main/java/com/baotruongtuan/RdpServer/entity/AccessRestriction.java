@@ -1,9 +1,6 @@
 package com.baotruongtuan.RdpServer.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,12 +11,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity(name = "banned_domains")
+@Entity(name = "access_restrictions")
 public class AccessRestriction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
-    String app;
-    String domain;
+    @Column(name = "content")
+    String content;
 }

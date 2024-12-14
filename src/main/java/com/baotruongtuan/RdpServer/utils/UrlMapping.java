@@ -32,7 +32,7 @@ public class UrlMapping {
     public static final String REMOVE_AVATAR = "/avatar/{userId}";
 
     // ACCESS RESTRICTION API
-    public static final String ACCESS_RESTRICTIONS = API + "/access_restrictions";
+    public static final String ACCESS_RESTRICTIONS = API + "/access-restrictions";
     public static final String GET_ALL_ACCESS_RESTRICTIONS = "/all-access-restrictions";
     public static final String CREATE_ACCESS_RESTRICTION = "/access-restriction";
     public static final String DELETE_ACCESS_RESTRICTION = "/access-restriction/{accessRestrictionId}";

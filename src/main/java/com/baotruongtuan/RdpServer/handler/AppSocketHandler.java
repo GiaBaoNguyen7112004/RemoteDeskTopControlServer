@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-import com.baotruongtuan.RdpServer.dto.UserDTO;
+import com.baotruongtuan.RdpServer.entity.AccessRestriction;
+import com.baotruongtuan.RdpServer.repository.AccessRestrictionsRepository;
+import com.baotruongtuan.RdpServer.service.imp.IAccessRestrictionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.*;
@@ -47,7 +51,7 @@ public class AppSocketHandler implements WebSocketHandler {
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     Map<Integer, WebSocketSession> activeSessions = new ConcurrentHashMap<>();
     JwtUtilHelper jwtUtilHelper;
-    IDepartmentService iDepartmentService;
+    AccessRestrictionsRepository accessRestrictionsRepository;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {}
@@ -71,7 +75,6 @@ public class AppSocketHandler implements WebSocketHandler {
                         User user = userRepository
                                 .findByUsername(username)
                                 .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXCEPTION));
-                        user.setIsOnline(true);
                         userRepository.save(user);
 
                         session.getAttributes().put("username", username);
@@ -82,6 +85,11 @@ public class AppSocketHandler implements WebSocketHandler {
                                                 .getJWTClaimsSet()
                                                 .getClaim("scope")
                                                 .toString());
+                        log.info("Role cua client la:"
+                                + verifiedJWT
+                                        .getJWTClaimsSet()
+                                        .getClaim("scope")
+                                        .toString());
                         session.getAttributes()
                                 .put(
                                         "clientId",
@@ -91,7 +99,6 @@ public class AppSocketHandler implements WebSocketHandler {
                                                 .toString());
                         establishConnection(session);
 
-//                        log.info(mapper.writeValueAsString(iDepartmentService.getMembersInDepartment(4)));
                     } catch (AppException e) {
                         SessionEventDTO sessionEventDTO = SessionEventDTO.builder()
                                 .title(EventStatus.INFO.name())
@@ -104,12 +111,32 @@ public class AppSocketHandler implements WebSocketHandler {
                     break;
                 }
                 case "start-share-screen": {
+                    int departmentId;
+                    try {
+                        departmentId = Integer.parseInt(
+                                jsonNode.path("data").path("departmentId").asText());
+                    } catch (NumberFormatException e) {
+                        throw new AppException(ErrorCode.INVALID_DATA);
+                    }
+
+                    List<User> users = userRepository.findByDepartmentId(departmentId);
+                    Set<Integer> setId = users.stream().map(User::getId).collect(Collectors.toSet());
 
                     session.getAttributes().put("isSharing", 1);
                     List<WebSocketSession> staffSessions = activeSessions.values().stream()
-                            .filter(staffSession ->
-                                    staffSession.getAttributes().get("role").equals("ROLE_STAFF"))
+                            .filter(staffSession -> {
+                                if (staffSession.equals(session)) {
+                                    return false;
+                                }
+                                Object clientId = staffSession.getAttributes().get("clientId");
+                                int value = (clientId instanceof Integer)
+                                        ? (int) clientId
+                                        : Integer.parseInt(clientId.toString());
+                                log.info("Danh sach client id trong active session:" + value);
+                                return setId.contains(value);
+                            })
                             .toList();
+
                     staffSessions.forEach(
                             staffSession -> staffSession.getAttributes().put("isSharing", 1));
 
@@ -130,21 +157,30 @@ public class AppSocketHandler implements WebSocketHandler {
                     SocketMessage staffSocketMessage = mapper.readValue(payload, SocketMessage.class);
                     List<WebSocketSession> adminSessions = activeSessions.values().stream()
                             .filter(activeSession -> {
-                                Object isSharing = activeSession.getAttributes().get("isSharing");
-                                int value = (isSharing instanceof Integer)
-                                        ? (int) isSharing
-                                        : Integer.parseInt(isSharing.toString());
-                                return value == 1;
+                                log.info("Id cua tat ca client dang ket noi:"
+                                        + activeSession
+                                                .getAttributes()
+                                                .get("clientId")
+                                                .toString());
+                                if (activeSession.equals(session)) {
+                                    return false;
+                                }
+                                return activeSession.getAttributes().get("role").equals("ROLE_ADMIN");
                             })
                             .toList();
+                    log.info("so luong adminSessions" + adminSessions.size());
 
                     SocketMessage adminSocketMessage = SocketMessage.builder()
                             .type("offer")
                             .data(staffSocketMessage.getData())
                             .build();
-
                     adminSessions.forEach(adminSession -> {
                         try {
+                            log.info("id cua adminSession:"
+                                    + adminSession
+                                            .getAttributes()
+                                            .get("clientId")
+                                            .toString());
                             adminSession.sendMessage(new TextMessage(mapper.writeValueAsString(adminSocketMessage)));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -157,6 +193,10 @@ public class AppSocketHandler implements WebSocketHandler {
                     SocketMessage adminSocketMessage = mapper.readValue(payload, SocketMessage.class);
                     List<WebSocketSession> staffSessions = activeSessions.values().stream()
                             .filter(staffSession -> {
+                                if (staffSession.equals(session)) {
+                                    return false;
+                                }
+
                                 Object isSharing = staffSession.getAttributes().get("isSharing");
                                 int value = (isSharing instanceof Integer)
                                         ? (int) isSharing
@@ -182,10 +222,13 @@ public class AppSocketHandler implements WebSocketHandler {
                 }
 
                 case "ice-candidate": {
-                    log.info("Co thang goi ice-candidate");
                     SocketMessage adminSocketMessage = mapper.readValue(payload, SocketMessage.class);
                     List<WebSocketSession> staffSessions = activeSessions.values().stream()
                             .filter(staffSession -> {
+                                if (staffSession.equals(session)) {
+                                    return false;
+                                }
+
                                 Object isSharing = staffSession.getAttributes().get("isSharing");
                                 int value = (isSharing instanceof Integer)
                                         ? (int) isSharing
@@ -210,9 +253,9 @@ public class AppSocketHandler implements WebSocketHandler {
                     break;
                 }
 
-                    //                case "active-app" : {
-                    //
-                    //                }
+                case "active-app": {
+                    String content = jsonNode.path("data").path("content").asText();
+                }
             }
         } else {
             System.err.println("Unsupported message type: " + message.getClass().getName());
@@ -231,6 +274,7 @@ public class AppSocketHandler implements WebSocketHandler {
                 Integer.parseInt(session.getAttributes().get("clientId").toString());
 
         WebSocketSession removeSession = activeSessions.remove(clientId);
+
         if (removeSession == null) {
             log.warn("Session not found in activeSessions. ClientId: {}", clientId);
         } else {

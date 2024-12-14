@@ -23,7 +23,6 @@ public class User {
     String password;
     String username;
     String email;
-    Boolean isOnline;
     String jobTitle;
     String companyName;
 

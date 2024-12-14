@@ -27,7 +27,8 @@ public enum ErrorCode {
     CANNOT_UPDATE(2100, "Cannot update", HttpStatus.BAD_REQUEST),
     ALREADY_JOINED(2101, "User already joined this department", HttpStatus.BAD_REQUEST),
     NOT_JOIN(2102, "User have not joined this department", HttpStatus.BAD_REQUEST),
-    DUPLICATE_DATA(2103, "Duplicate Data", HttpStatus.BAD_REQUEST);
+    DUPLICATE_DATA(2103, "Duplicate Data", HttpStatus.BAD_REQUEST),
+    INVALID_DATA(2104, "Data is unacceptable", HttpStatus.BAD_REQUEST);
 
     int code;
     String message;

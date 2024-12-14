@@ -2,6 +2,7 @@ package com.baotruongtuan.RdpServer.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.baotruongtuan.RdpServer.dto.SessionLogDTO;
@@ -20,6 +21,7 @@ public class SessionLogService implements ISessionLogsService {
     SessionLogRepository sessionLogRepository;
     SessionLogMapper sessionLogMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<SessionLogDTO> getUserSessionLogs(int userId) {
         return sessionLogRepository.findAll().stream()

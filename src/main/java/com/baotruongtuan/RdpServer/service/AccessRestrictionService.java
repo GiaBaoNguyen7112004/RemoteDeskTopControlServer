@@ -3,6 +3,8 @@ package com.baotruongtuan.RdpServer.service;
 import java.net.URI;
 import java.util.List;
 
+import com.baotruongtuan.RdpServer.repository.AccessRestrictionsRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.baotruongtuan.RdpServer.dto.AccessRestrictionDTO;
@@ -11,7 +13,6 @@ import com.baotruongtuan.RdpServer.exception.AppException;
 import com.baotruongtuan.RdpServer.exception.ErrorCode;
 import com.baotruongtuan.RdpServer.mapper.AccessRestrictionMapper;
 import com.baotruongtuan.RdpServer.payload.request.AccessRestrictionCreationRequest;
-import com.baotruongtuan.RdpServer.repository.AccessRestrictionRepository;
 import com.baotruongtuan.RdpServer.service.imp.IAccessRestrictionService;
 
 import lombok.AccessLevel;
@@ -23,35 +24,48 @@ import lombok.experimental.FieldDefaults;
 @Service
 public class AccessRestrictionService implements IAccessRestrictionService {
     AccessRestrictionMapper accessRestrictionMapper;
-    AccessRestrictionRepository accessRestrictionRepository;
+    AccessRestrictionsRepository accessRestrictionsRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<AccessRestrictionDTO> getAllAccessRestrictions() {
-        return accessRestrictionRepository.findAll().stream()
+        return accessRestrictionsRepository.findAll().stream()
                 .map(accessRestrictionMapper::toAccessRestrictionDTO)
                 .toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public AccessRestrictionDTO createAccessRestriction(
             AccessRestrictionCreationRequest accessRestrictionCreationRequest) {
-        String domain = extractDomain(accessRestrictionCreationRequest.getDomain());
+        String content = accessRestrictionCreationRequest.getContent();
+        String processedContent = (isValidUrl(content)) ? extractDomain(content) : content;
 
-        if (accessRestrictionRepository.existsByDomain(domain)) {
+        if (accessRestrictionsRepository.existsAccessRestrictionByContent(processedContent)) {
             throw new AppException(ErrorCode.DUPLICATE_DATA);
         }
-        AccessRestriction accessRestriction = AccessRestriction.builder()
-                .domain(domain)
-                .app(accessRestrictionCreationRequest.getApp())
-                .build();
-        return accessRestrictionMapper.toAccessRestrictionDTO(accessRestrictionRepository.save(accessRestriction));
+        AccessRestriction accessRestriction =
+                AccessRestriction.builder().content(processedContent).build();
+        return accessRestrictionMapper
+                .toAccessRestrictionDTO(accessRestrictionsRepository.save(accessRestriction));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteAccessRestriction(String id) {
-        accessRestrictionRepository.findById(id).ifPresentOrElse(accessRestrictionRepository::delete, () -> {
+        accessRestrictionsRepository.findById(id)
+                .ifPresentOrElse(accessRestrictionsRepository::delete, () -> {
             throw new AppException(ErrorCode.NO_DATA_EXCEPTION);
         });
+    }
+
+    private boolean isValidUrl(String content) {
+        try {
+            URI uri = new URI(content);
+            return uri.getScheme() != null && uri.getHost() != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private String extractDomain(String url) {

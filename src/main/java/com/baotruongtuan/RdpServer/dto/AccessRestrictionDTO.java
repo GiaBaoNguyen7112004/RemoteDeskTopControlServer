@@ -11,6 +11,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccessRestrictionDTO {
     String id;
-    String domain;
-    String app;
+    String content;
 }
