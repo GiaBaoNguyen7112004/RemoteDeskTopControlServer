@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.baotruongtuan.RdpServer.repository.AccessRestrictionsRepository;
+import com.baotruongtuan.RdpServer.utils.DomainExtractHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import lombok.experimental.FieldDefaults;
 public class AccessRestrictionService implements IAccessRestrictionService {
     AccessRestrictionMapper accessRestrictionMapper;
     AccessRestrictionsRepository accessRestrictionsRepository;
+    DomainExtractHelper domainExtractHelper;
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
@@ -39,7 +41,8 @@ public class AccessRestrictionService implements IAccessRestrictionService {
     public AccessRestrictionDTO createAccessRestriction(
             AccessRestrictionCreationRequest accessRestrictionCreationRequest) {
         String content = accessRestrictionCreationRequest.getContent();
-        String processedContent = (isValidUrl(content)) ? extractDomain(content) : content;
+        String processedContent = (domainExtractHelper.isValidUrl(content))
+                ? domainExtractHelper.extractDomain(content) : content;
 
         if (accessRestrictionsRepository.existsAccessRestrictionByContent(processedContent)) {
             throw new AppException(ErrorCode.DUPLICATE_DATA);
@@ -57,23 +60,5 @@ public class AccessRestrictionService implements IAccessRestrictionService {
                 .ifPresentOrElse(accessRestrictionsRepository::delete, () -> {
             throw new AppException(ErrorCode.NO_DATA_EXCEPTION);
         });
-    }
-
-    private boolean isValidUrl(String content) {
-        try {
-            URI uri = new URI(content);
-            return uri.getScheme() != null && uri.getHost() != null;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private String extractDomain(String url) {
-        try {
-            URI uri = new URI(url);
-            return uri.getHost().replace("www.", "");
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid URL: " + url);
-        }
     }
 }

@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/rdp_db
     username: root
-    password:
+    password: giabao123123
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -17,7 +17,6 @@ server:
     context-path: /rdp
     multipart:
       max-file-size: 10MB
-
 jwt:
   signer_key: jCBbsOzUT0GjKLK2JiPpsn22tnS/UCGmz6WzqM2OmvYCXT9/PjiyFRVw15ky3rEn
   expiration-time: 86400
