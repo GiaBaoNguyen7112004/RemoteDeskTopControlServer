@@ -23,14 +23,14 @@ This application enables an **admin** to manage and monitor multiple **staff** c
 ### Prerequisites
 
 - JDK 11 or higher
-- MySQL/PostgreSQL (configured in `application.properties`)
+- MySQL (configured in `application.properties`)
 - Docker (optional for containerization)
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/remote-desktop-control-admin.git
+   git clone https://github.com/GiaBaoNguyen7112004/RemoteDeskTopControlServer.git
 2. Build the application
    ```bash
    mvn clean install
