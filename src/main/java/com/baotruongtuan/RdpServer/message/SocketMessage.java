@@ -15,4 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class SocketMessage {
     String type;
     Object data;
+    Integer clientId;
 }

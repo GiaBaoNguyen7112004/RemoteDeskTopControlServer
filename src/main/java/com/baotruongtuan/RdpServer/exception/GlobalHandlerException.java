@@ -15,11 +15,11 @@ import com.baotruongtuan.RdpServer.payload.response.ResponseData;
 
 @ControllerAdvice
 public class GlobalHandlerException {
-    private final String MAX_ATTRIBUTE = "max";
-    private final String MIN_ATTRIBUTE = "min";
+    private static final String MAX_ATTRIBUTE = "max";
+    private static final String MIN_ATTRIBUTE = "min";
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<?> appExceptionHandler(AppException e) {
+    public ResponseEntity<ResponseData> appExceptionHandler(AppException e) {
         ErrorCode errorCode = e.getErrorCode();
 
         ResponseData responseData = ResponseData.builder()
@@ -31,7 +31,7 @@ public class GlobalHandlerException {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> accessDeniedException(AccessDeniedException e) {
+    public ResponseEntity<ResponseData> accessDeniedException(AccessDeniedException e) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
         ResponseData responseData = ResponseData.builder()
@@ -43,7 +43,7 @@ public class GlobalHandlerException {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ResponseData> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String, Object> attributes = null;
 
@@ -54,8 +54,7 @@ public class GlobalHandlerException {
             var constraintViolations =
                     e.getBindingResult().getAllErrors().get(0).unwrap(ConstraintViolation.class);
             attributes = constraintViolations.getConstraintDescriptor().getAttributes();
-        } catch (Exception ex) {
-        }
+        } catch (Exception ex) {}
 
         ResponseData responseData = ResponseData.builder()
                 .code(errorCode.getCode())
@@ -68,17 +67,17 @@ public class GlobalHandlerException {
         return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
     }
 
-    //    @ExceptionHandler(Exception.class)
-    //    public ResponseEntity<?> exceptionHandler(Exception e) {
-    //        ErrorCode errorCode = ErrorCode.UNCATEGORIED_EXCEPTION;
-    //
-    //        ResponseData responseData = ResponseData.builder()
-    //                .data(errorCode.getMessage())
-    //                .code(errorCode.getCode())
-    //                .build();
-    //
-    //        return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
-    //    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseData> exceptionHandler(Exception e) {
+        ErrorCode errorCode = ErrorCode.UNCATEGORIED_EXCEPTION;
+
+        ResponseData responseData = ResponseData.builder()
+                .data(errorCode.getMessage())
+                .code(errorCode.getCode())
+                .build();
+
+        return new ResponseEntity<>(responseData, errorCode.getHttpStatus());
+    }
 
     public String mapAttribute(Map<String, Object> attributes, String message) {
         String maxValue = String.valueOf(attributes.get(MAX_ATTRIBUTE));
