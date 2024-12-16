@@ -1,4 +1,4 @@
-# Remote Desktop Control Admin Panel
+# Remote Desktop Control 
 
 This application enables an **admin** to manage and monitor multiple **staff** computers. It provides functionalities for real-time screen viewing, remote control, and error logging when staff access prohibited applications or domains. The app is secured using **Spring Security** and **JWT** for authentication and authorization.
 
