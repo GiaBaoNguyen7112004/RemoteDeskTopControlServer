@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import com.baotruongtuan.RdpServer.enums.MessageType;
@@ -58,6 +59,7 @@ public class AppSocketHandler implements WebSocketHandler {
     AccessRestrictionsRepository accessRestrictionsRepository;
     Set<String> violations = new HashSet<>();
 
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {}
 
@@ -66,13 +68,14 @@ public class AppSocketHandler implements WebSocketHandler {
         SocketMessage clientSocketMessage = socketMessageMapper(message);
         log.info("Nguoi dung gui 1 tin nhan voi type: {}", convertJsonToText(message, "type"));
         log.info("Nguoi dung gui data: {}", getData(message));
+        log.info("Nguoi dung gui clientId: {}", clientSocketMessage.getClientId());
         switch (convertJsonToText(message, "type")) {
             case "authentication": {
                 handleAuthentication(session, message);
                 break;
             }
             case "start-share-screen": {
-                handleStartShareScreen(session, message);
+                handleStartShareScreen(session, message, false);
                 break;
             }
 
@@ -82,12 +85,12 @@ public class AppSocketHandler implements WebSocketHandler {
             }
 
             case "answer": {
-                handleAnswer(session, clientSocketMessage);
+                handleAnswer(clientSocketMessage);
                 break;
             }
 
             case "ice-candidate": {
-                handleIceCandidate(session, clientSocketMessage);
+                handleIceCandidate(clientSocketMessage);
                 break;
             }
 
@@ -137,9 +140,10 @@ public class AppSocketHandler implements WebSocketHandler {
         return false;
     }
 
-    private void establishConnection(WebSocketSession session) throws Exception {
+    private void establishConnection(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         Integer clientId =
                 Integer.parseInt(session.getAttributes().get(SessionAttribute.CLIENT_ID).toString());
+        log.info("Establish conntection - Client Id: {}", clientId);
 
         SessionLog sessionLog = SessionLog.builder()
                 .id(session.getId())
@@ -160,10 +164,37 @@ public class AppSocketHandler implements WebSocketHandler {
                 SocketMessage.builder().type(MessageType.NOTIFY.getName()).data(sessionEventDTO).build();
 
         session.getAttributes().put(SessionAttribute.SESSION_LOG, sessionLog);
+        session.getAttributes().put(SessionAttribute.IS_SHARING, "0");
         session.sendMessage(new TextMessage(mapper.writeValueAsString(socketMessage)));
         activeSessions.put(clientId, session);
-
+        if(isStaff(session)) syncStaffSession(session, message);
         log.info("New client with id:{} connected to server", clientId);
+    }
+
+    public void syncStaffSession(WebSocketSession session, WebSocketMessage<?> message)
+    {
+        List<Integer> departmentIds = (List<Integer>) session.getAttributes().get(SessionAttribute.DEPARTMENT_ID);
+        log.info("So luong departmentIds: {}", departmentIds.size());
+
+        AtomicBoolean isLate = new AtomicBoolean(false);
+
+        activeSessions.values().forEach(activeSession -> {
+            log.info("syncStaffSession - id cua tung thang dang share");
+            if(Integer.parseInt(activeSession.getAttributes().get(SessionAttribute.IS_SHARING).toString()) == 1
+            && departmentIds.contains
+                    (Integer.parseInt(activeSession.getAttributes().get(SessionAttribute.DEPARTMENT_ID).toString())))
+            {
+                log.info("syncStaffSession - da phat hien co 1 thang trong department dang share");
+                isLate.set(true);
+            }
+        });
+
+        if (isLate.get()) {
+            log.info("syncStaffSession - Da di tre");
+
+            WebSocketSession adminSession = getAdminSession();
+            handleStartShareScreen(adminSession, message, true);
+        }
     }
 
     public SessionLog getSessionLog(WebSocketSession session) {
@@ -201,22 +232,21 @@ public class AppSocketHandler implements WebSocketHandler {
         else {
             log.info("Cannot map payload to SocketMessage");
         }
-
         return null;
     }
 
-    public void setAttributeForSession(WebSocketSession session, SignedJWT signedJWT, String key, String value){
+    public void setAttributeForSession(WebSocketSession session, SignedJWT signedJWT, String key, String claimName){
         if(signedJWT != null){
             try {
                 session.getAttributes().put(key, signedJWT
                         .getJWTClaimsSet()
-                        .getClaim(value)
+                        .getClaim(claimName)
                         .toString());
             } catch (ParseException e) {
                 log.error(e.getMessage());
             }
         }
-        else session.getAttributes().put(key, value);
+        else session.getAttributes().put(key, claimName);
     }
 
     public Object getData(WebSocketMessage<?> message){
@@ -235,22 +265,46 @@ public class AppSocketHandler implements WebSocketHandler {
         return null;
     }
 
+    public boolean isAdmin(WebSocketSession session){
+        return session.getAttributes()
+                .get(SessionAttribute.ROLE).equals("ROLE_" + UserRole.ADMIN.getName());
+    }
+
+    public boolean isStaff(WebSocketSession session){
+        return session.getAttributes()
+                .get(SessionAttribute.ROLE).equals("ROLE_" + UserRole.STAFF.getName());
+    }
+
     public void handleAuthentication(WebSocketSession session, WebSocketMessage<?> message){
         String token = convertJsonToText(message, "token");
+        log.info("Lay duoc token tu nguoi dung: {}", token);
         try {
+            log.info("handleAuthentication - kiem tra xac thuc token");
             SignedJWT verifiedJWT = jwtUtilHelper.verifyToken(token);
+            log.info("handleAuthentication - kiem tra xac thuc token thanh cong");
             String username = verifiedJWT.getJWTClaimsSet().getSubject();
+
+            log.info("handleAuthentication: lay username cua nguoi dung tu token {}", username);
+
+            setAttributeForSession(session, verifiedJWT, SessionAttribute.ROLE, "scope");
+            setAttributeForSession(session, verifiedJWT, SessionAttribute.CLIENT_ID, "id");
+            session.getAttributes().put(SessionAttribute.USERNAME, username);
 
             User user = userRepository
                     .findByUsername(username)
                     .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXCEPTION));
-            userRepository.save(user);
 
-            session.getAttributes().put(SessionAttribute.USERNAME, username);
-            setAttributeForSession(session, verifiedJWT, SessionAttribute.ROLE, "scope" );
-            setAttributeForSession(session, verifiedJWT, SessionAttribute.CLIENT_ID, "id");
+            if(!isAdmin(session))
+            {
+                log.info("handleAuthentication - kiem tra khong phai la admin");
+                List<Integer> departmentIds = user.getDepartmentDetails().stream()
+                        .map(departmentDetail -> departmentDetail.getDepartment().getId()).toList();
 
-            establishConnection(session);
+                log.info("handleAuthentication:{}", departmentIds.size());
+                session.getAttributes().put(SessionAttribute.DEPARTMENT_ID, departmentIds);
+            }
+
+            establishConnection(session, message);
         } catch (Exception e) {
             SessionEventDTO sessionEventDTO = SessionEventDTO.builder()
                     .title(MessageType.INFO.getName())
@@ -266,19 +320,28 @@ public class AppSocketHandler implements WebSocketHandler {
         }
     }
 
-    public void handleStartShareScreen(WebSocketSession session, WebSocketMessage<?> message){
+    public void handleStartShareScreen(WebSocketSession session, WebSocketMessage<?> message, boolean isReload){
         int departmentId;
-        try {
-            departmentId = Integer.parseInt(convertJsonToText(message, "departmentId"));
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.INVALID_DATA);
+        if(!isReload){
+            try {
+                departmentId = Integer.parseInt(convertJsonToText(message, "departmentId"));
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.INVALID_DATA);
+            }
+        }else{
+            departmentId = Integer.parseInt(session.getAttributes().get(SessionAttribute.DEPARTMENT_ID).toString());
         }
+
+        session.getAttributes().put(SessionAttribute.DEPARTMENT_ID, departmentId);
+        session.getAttributes().put(SessionAttribute.IS_SHARING, "1");
 
         List<User> users = userRepository.findByDepartmentId(departmentId);
         Set<Integer> setId = users.stream().map(User::getId).collect(Collectors.toSet());
 
         List<WebSocketSession> staffSessions = activeSessions.values().stream()
                 .filter(staffSession -> {
+                    staffSession.getAttributes().put(SessionAttribute.IS_SHARING, "1");
+                    staffSession.getAttributes().put(SessionAttribute.DEPARTMENT_ID, departmentId);
                     if (staffSession.equals(session)) {
                         return false;
                     }
@@ -308,13 +371,7 @@ public class AppSocketHandler implements WebSocketHandler {
         Integer clientId =
                 Integer.parseInt(session.getAttributes().get(SessionAttribute.CLIENT_ID).toString());
         List<WebSocketSession> adminSessions = activeSessions.values().stream()
-                .filter(activeSession -> {
-                    if (activeSession.equals(session)) {
-                        return false;
-                    }
-                    return activeSession.getAttributes()
-                            .get(SessionAttribute.ROLE).equals("ROLE_" + UserRole.ADMIN.getName());
-                })
+                .filter(this::isAdmin)
                 .toList();
         SocketMessage adminSocketMessage = SocketMessage.builder()
                 .type(MessageType.OFFER.getName())
@@ -330,9 +387,9 @@ public class AppSocketHandler implements WebSocketHandler {
         });
     }
 
-    public void handleAnswer(WebSocketSession session, SocketMessage clientSocketMessage)
+    public void handleAnswer(SocketMessage clientSocketMessage)
     {
-        List<WebSocketSession> staffSessions = getStaffSessions(session, clientSocketMessage);
+        List<WebSocketSession> staffSessions = getStaffSessions(clientSocketMessage);
 
         SocketMessage staffSocketMessage = SocketMessage.builder()
                 .type(MessageType.ANSWER.getName())
@@ -348,9 +405,9 @@ public class AppSocketHandler implements WebSocketHandler {
         });
     }
 
-    public void handleIceCandidate(WebSocketSession session, SocketMessage clientSocketMessage)
+    public void handleIceCandidate(SocketMessage clientSocketMessage)
     {
-        List<WebSocketSession> staffSessions = getStaffSessions(session, clientSocketMessage);
+        List<WebSocketSession> staffSessions = getStaffSessions(clientSocketMessage);
 
         SocketMessage staffSocketMessage = SocketMessage.builder()
                 .type(MessageType.ICE_CANDIDATE.getName())
@@ -398,16 +455,20 @@ public class AppSocketHandler implements WebSocketHandler {
         } catch (Exception e) {log.info(e.getMessage());}
     }
 
-    public List<WebSocketSession> getStaffSessions(WebSocketSession session, SocketMessage clientSocketMessage) {
+    public List<WebSocketSession> getStaffSessions(SocketMessage clientSocketMessage) {
         Integer clientId = clientSocketMessage.getClientId();
         return activeSessions.values().stream()
-                .filter(staffSession -> {
-                    if (staffSession.equals(session)) {
-                        return false;
-                    }
-                    return Integer
-                            .parseInt(session.getAttributes().get(SessionAttribute.CLIENT_ID).toString()) == clientId;
-                })
+                .filter(staffSession -> Integer
+                            .parseInt(staffSession.getAttributes()
+                                    .get(SessionAttribute.CLIENT_ID).toString()) == clientId)
                 .toList();
+    }
+
+    public WebSocketSession getAdminSession() {
+        Optional<WebSocketSession> adminSession = activeSessions.values().stream()
+                .filter(this::isAdmin)
+                .findAny();
+
+        return adminSession.orElse(null);
     }
 }

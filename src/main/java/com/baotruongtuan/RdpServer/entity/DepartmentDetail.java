@@ -20,6 +20,6 @@ public class DepartmentDetail {
     @ManyToOne
     User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     Department department;
 }

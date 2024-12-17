@@ -1,7 +1,9 @@
 package com.baotruongtuan.RdpServer.entity;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.baotruongtuan.RdpServer.enums.UserRole;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -36,7 +38,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<SessionLog> sessionLogs;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     List<DepartmentDetail> departmentDetails;
 
     public void leaveDepartment(int departmentId) {
